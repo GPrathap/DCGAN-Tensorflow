@@ -73,6 +73,9 @@ class Evaler(object):
         self.saver = tf.train.Saver(max_to_keep=100)
 
         self.checkpoint_path = config.checkpoint_path
+        #print("--------->self.checkpoint_path" + self.checkpoint_path)
+        print("--------->self.train_dir" + self.train_dir)
+
         if self.checkpoint_path is None and self.train_dir:
             self.checkpoint_path = tf.train.latest_checkpoint(self.train_dir)
         if self.checkpoint_path is None:

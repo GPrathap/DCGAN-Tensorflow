@@ -212,7 +212,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--batch_size', type=int, default=64)
     parser.add_argument('--prefix', type=str, default='default')
-    parser.add_argument('--checkpoint', type=str, default='/data/checkpoint1')
+    parser.add_argument('--checkpoint', type=str, default=None)
     parser.add_argument('--dataset', type=str, default='CIFAR10',
                         choices=['MNIST', 'Fashion', 'SVHN', 'CIFAR10'])
     parser.add_argument('--learning_rate', type=float, default=1e-4)

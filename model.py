@@ -56,23 +56,13 @@ class Model(object):
                 z = tf.reshape(z, [self.batch_size, 1, 1, -1])
                 g_1 = deconv2d(z, deconv_info[0], is_train, name='g_1_deconv')
                 print(scope.name, g_1)
-                g_2 = deconv2d(g_1, deconv_info[1], is_train, name='g_2_deconv', padding="SAME")
+                g_2 = deconv2d(g_1, deconv_info[1], is_train, name='g_2_deconv')
                 print(scope.name, g_2)
-                g_3 = deconv2d(g_2, deconv_info[2], is_train, name='g_3_deconv', padding="SAME")
+                g_3 = deconv2d(g_2, deconv_info[2], is_train, name='g_3_deconv')
                 print(scope.name, g_3)
-                g_4 = deconv2d(g_3, deconv_info[3], is_train, name='g_4_deconv', padding="SAME")
+                g_4 = deconv2d(g_3, deconv_info[3], is_train, name='g_4_deconv', activation_fn='tanh')
                 print(scope.name, g_4)
-                g_5 = deconv2d(g_4, deconv_info[4], is_train, name='g_5_deconv', padding="SAME")
-                print(scope.name, g_5)
-                g_6 = deconv2d(g_5, deconv_info[5], is_train, name='g_6_deconv', padding="SAME")
-                print(scope.name, g_6)
-                g_7 = deconv2d(g_6, deconv_info[6], is_train, name='g_7_deconv', padding="SAME")
-                print(scope.name, g_7)
-                g_8 = deconv2d(g_7, deconv_info[7], is_train, name='g_8_deconv', padding="SAME")
-                print(scope.name, g_8)
-                g_9 = deconv2d(g_8, deconv_info[8], is_train, name='g_9_deconv', activation_fn='tanh', padding="SAME")
-                print(scope.name, g_9)
-                output = g_9
+                output = g_4
                 assert output.get_shape().as_list() == self.image.get_shape().as_list(), output.get_shape().as_list()
             return output
 
@@ -82,37 +72,17 @@ class Model(object):
                 if not reuse: print('\033[93m'+scope.name+'\033[0m')
                 d_1 = conv2d(img, conv_info[0], is_train, name='d_1_conv')
                 d_1 = slim.dropout(d_1, keep_prob=0.5, is_training=is_train, scope='d_1_conv/')
-
                 if not reuse: print(scope.name, d_1)
                 d_2 = conv2d(d_1, conv_info[1], is_train, name='d_2_conv')
                 d_2 = slim.dropout(d_2, keep_prob=0.5, is_training=is_train, scope='d_2_conv/')
-
                 if not reuse: print(scope.name, d_2)
                 d_3 = conv2d(d_2, conv_info[2], is_train, name='d_3_conv')
                 d_3 = slim.dropout(d_3, keep_prob=0.5, is_training=is_train, scope='d_3_conv/')
-
                 if not reuse: print(scope.name, d_3)
-                d_4 = conv2d(d_3, conv_info[3], is_train, name='d_4_conv')
-                d_4 = slim.dropout(d_4, keep_prob=0.5, is_training=is_train, scope='d_4_conv/')
-
+                d_4 = slim.fully_connected(
+                    tf.reshape(d_3, [self.batch_size, -1]), 1, scope='d_4_fc', activation_fn=None)
                 if not reuse: print(scope.name, d_4)
-                d_5 = conv2d(d_4, conv_info[4], is_train, name='d_5_conv')
-                d_5 = slim.dropout(d_5, keep_prob=0.5, is_training=is_train, scope='d_5_conv/')
-
-                if not reuse: print(scope.name, d_5)
-                d_6 = conv2d(d_5, conv_info[5], is_train, name='d_6_conv')
-                d_6 = slim.dropout(d_6, keep_prob=0.5, is_training=is_train, scope='d_6_conv/')
-
-                if not reuse: print(scope.name, d_6)
-                d_7 = conv2d(d_6, conv_info[6], is_train, name='d_7_conv')
-                d_7 = slim.dropout(d_7, keep_prob=0.5, is_training=is_train, scope='d_7_conv/')
-
-                if not reuse: print(scope.name, d_7)
-                d_8 = slim.fully_connected(
-                    tf.reshape(d_7, [self.batch_size, -1]), 1, scope='d_4_fc', activation_fn=None)
-
-                if not reuse: print(scope.name, d_8)
-                output = d_8
+                output = d_4
                 assert output.get_shape().as_list() == [self.batch_size, 1]
                 return tf.nn.sigmoid(output), output
 

@@ -20,18 +20,18 @@ def prepare_h5py(train_image, test_image, data_dir, shape=None):
 
     print ('Preprocessing data...')
 
-    import progressbar
-    from time import sleep
-    bar = progressbar.ProgressBar(maxval=100, \
-    widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
-    bar.start()
+    #import progressbar
+    #from time import sleep
+    #bar = progressbar.ProgressBar(maxval=100, \
+    #widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
+    #bar.start()
 
     f = h5py.File(os.path.join(data_dir, 'data.hy'), 'w')
     data_id = open(os.path.join(data_dir,'id.txt'), 'w')
     for i in range(image.shape[0]):
 
-        if i%(image.shape[0]/100)==0:
-            bar.update(i/(image.shape[0]/100))
+        #if i%(image.shape[0]/100)==0:
+        #    bar.update(i/(image.shape[0]/100))
 
         grp = f.create_group(str(i))
         data_id.write(str(i)+'\n')
@@ -39,7 +39,7 @@ def prepare_h5py(train_image, test_image, data_dir, shape=None):
             grp['image'] = np.reshape(image[i], shape, order='F')
         else:
             grp['image'] = image[i]
-    bar.finish()
+    #bar.finish()
     f.close()
     data_id.close()
     return
@@ -158,6 +158,7 @@ def createFiles(path, classes):
     for filename in glob.iglob(path, recursive=True):
 
         image = scipy.misc.imread(filename).astype(np.uint8)
+        image = scipy.misc.imresize(image,[32, 32])
         # image = tf.gfile.FastGFile(filename, 'rb').read()
         currentClass = ""
         for cla in classes:
@@ -188,7 +189,7 @@ def download_cifar10(download_path):
     traing_images = np.array(datalist_traing['images'])
     testing_images = np.array(datalist_testing['images'])
 
-    prepare_h5py(traing_images, testing_images, data_dir, [256, 256, 3])
+    prepare_h5py(traing_images, testing_images, data_dir, [32, 32, 3])
 
 
 if __name__ == '__main__':

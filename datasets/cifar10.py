@@ -61,13 +61,13 @@ class Dataset(object):
         )
 
 def get_data_info():
-    return np.array([256, 256, 3])
+    return np.array([32, 32, 3])
 
 def get_conv_info():
-    return np.array([4, 8, 16, 32, 64, 128, 256])
+    return np.array([64, 128, 256])
 
 def get_deconv_info():
-    return np.array([[512, 2, 1], [256, 4, 2], [64, 4, 2], [32, 4, 2], [16, 4, 2], [8, 4, 2], [4, 4, 2], [2, 4, 2], [3, 1, 1]])
+    return np.array([[384, 2, 1], [128, 4, 2], [64, 4, 2], [3, 6, 2]])
 
 def create_default_splits(is_train=True):
     ids = all_ids()
